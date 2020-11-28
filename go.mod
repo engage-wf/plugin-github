@@ -2,10 +2,8 @@ module github.com/engage-wf/github
 
 go 1.15
 
-replace github.com/engage-wf/core => ../../core
-
 require (
-	github.com/engage-wf/core v0.0.0
+	github.com/engage-wf/core v0.1.0
 	github.com/google/go-github/v32 v32.1.0
 	github.com/onsi/ginkgo v1.14.1 // indirect
 	github.com/onsi/gomega v1.10.2 // indirect
