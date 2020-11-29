@@ -1,4 +1,4 @@
-module github.com/engage-wf/github
+module github.com/engage-wf/plugin-github
 
 go 1.15
 
