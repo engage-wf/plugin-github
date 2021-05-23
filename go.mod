@@ -3,7 +3,6 @@ module github.com/engage-wf/plugin-github
 go 1.15
 
 require (
-	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/engage-wf/core v0.1.0
 	github.com/google/go-github/v32 v32.1.0
 	github.com/magiconair/properties v1.8.5 // indirect
