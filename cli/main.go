@@ -109,6 +109,7 @@ var (
 				),
 			),
 		),
+		Flag("token", Str(""), Description("Authentication token used to authenticate agains the Github API"), Env(), Persistent()),
 		FlagLogLevel("warn"),
 		FlagLogFormat(),
 		FlagLogFile(),
