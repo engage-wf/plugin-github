@@ -14,8 +14,6 @@ type PageInfo struct {
 	HasNextPage     githubv4.Boolean
 }
 
-var EmptyPageInfo = PageInfo{}
-
 type Query struct {
 	client     *GithubClient
 	target     interface{}
@@ -62,7 +60,14 @@ func (s *Query) Bool(name string, value bool) *Query {
 	return s
 }
 
-func (s *Query) Run(handler func() PageInfo) error {
+func (s *Query) Run() error {
+	if err := s.client.v4Client.Query(context.Background(), s.target, s.variables); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *Query) RunPaginated(handler func() PageInfo) error {
 	for {
 		if err := s.client.v4Client.Query(context.Background(), s.target, s.variables); err != nil {
 			return err

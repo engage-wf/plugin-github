@@ -74,7 +74,7 @@ func (s *GithubClient) loadRepositoryLanguages(repository *Repository) error {
 			} `graphql:"languages(first: 100, after: $cursor)"`
 		} `graphql:"repository(owner: $owner, name: $repo)"`
 	}
-	return s.Query(&query).Str("owner", repository.Owner).Str("repo", repository.Name).Cursor("cursor").Run(func() PageInfo {
+	return s.Query(&query).Str("owner", repository.Owner).Str("repo", repository.Name).Cursor("cursor").RunPaginated(func() PageInfo {
 		for _, lang := range query.Repository.Languages.Edges {
 			language := Language{
 				Name:        string(lang.Node.Name),
@@ -150,7 +150,7 @@ func (s *GithubClient) loadRepositoryCollaborators(repository *Repository) error
 		} `graphql:"repository(owner: $owner, name: $repo)"`
 	}
 	log.L().Info().Str("repo", repository.Name).Msg("Fetching Collaborators")
-	return s.Query(&query).Str("owner", repository.Owner).Str("repo", repository.Name).Cursor("cursor").Run(func() PageInfo {
+	return s.Query(&query).Str("owner", repository.Owner).Str("repo", repository.Name).Cursor("cursor").RunPaginated(func() PageInfo {
 		log.L().Info().Bool("next-page", bool(query.Repository.Collaborators.PageInfo.HasNextPage)).Str("repo", repository.Name).Msg("Fetched next page")
 		for _, coll := range query.Repository.Collaborators.Edges {
 			var sources []PermissionSource
@@ -231,7 +231,7 @@ func (s *GithubClient) loadRepositoryBranchProtectionRules(repository *Repositor
 			} `graphql:"branchProtectionRules(first: 100, after: $cursor)"`
 		} `graphql:"repository(owner: $owner, name: $repo)"`
 	}
-	return s.Query(&query).Str("owner", repository.Owner).Str("repo", repository.Name).Cursor("cursor").Run(func() PageInfo {
+	return s.Query(&query).Str("owner", repository.Owner).Str("repo", repository.Name).Cursor("cursor").RunPaginated(func() PageInfo {
 		log.L().Info().Bool("next-page", bool(query.Repository.BranchProtectionRules.PageInfo.HasNextPage)).Str("repo", repository.Name).Msg("Fetched next page")
 		for _, r := range query.Repository.BranchProtectionRules.Nodes {
 			var matchingRefs []string

@@ -61,7 +61,7 @@ func (s *GithubClient) getNonPendingMembers(org string) ([]*Member, error) {
 		} `graphql:"organization(login: $org)"`
 	}
 	var members []*Member
-	return members, s.Query(&query).Str("org", org).Cursor("cursor").Run(func() PageInfo {
+	return members, s.Query(&query).Str("org", org).Cursor("cursor").RunPaginated(func() PageInfo {
 		for _, edge := range query.Organization.MembersWithRole.Edges {
 			m := &Member{
 				Login:               string(edge.Node.Login),
@@ -94,7 +94,7 @@ func (s *GithubClient) getPendingMembers(org string) ([]*Member, error) {
 		} `graphql:"organization(login: $org)"`
 	}
 	var members []*Member
-	return members, s.Query(&query).Str("org", org).Cursor("cursor").Run(func() PageInfo {
+	return members, s.Query(&query).Str("org", org).Cursor("cursor").RunPaginated(func() PageInfo {
 		for _, node := range query.Organization.PendingMembers.Nodes {
 			m := &Member{
 				Login:     string(node.Login),
@@ -149,7 +149,7 @@ func (s *GithubClient) GetTeams(org string) ([]*Team, error) {
 		} `graphql:"organization(login: $org)"`
 	}
 	var teams []*Team
-	return teams, s.Query(&query).Str("org", org).Cursor("cursor").Run(func() PageInfo {
+	return teams, s.Query(&query).Str("org", org).Cursor("cursor").RunPaginated(func() PageInfo {
 		for _, node := range query.Organization.Teams.Nodes {
 			t := &Team{
 				ID:              string(node.ID),
@@ -197,7 +197,7 @@ func (s *GithubClient) loadTeamMembers(org string, team *Team) error {
 			} `graphql:"team(slug: $slug)"`
 		} `graphql:"organization(login: $org)"`
 	}
-	return s.Query(&query).Str("org", org).Str("slug", team.Slug).Cursor("cursor").Run(func() PageInfo {
+	return s.Query(&query).Str("org", org).Str("slug", team.Slug).Cursor("cursor").RunPaginated(func() PageInfo {
 		for _, m := range query.Organization.Team.Members.Edges {
 			teamMember := &TeamMember{
 				Login: string(m.Node.Login),
@@ -243,7 +243,7 @@ func (s *GithubClient) loadTeamRepositories(org string, team *Team) error {
 			} `graphql:"team(slug: $slug)"`
 		} `graphql:"organization(login: $org)"`
 	}
-	return s.Query(&query).Str("org", org).Str("slug", team.Slug).Cursor("cursor").Run(func() PageInfo {
+	return s.Query(&query).Str("org", org).Str("slug", team.Slug).Cursor("cursor").RunPaginated(func() PageInfo {
 		for _, m := range query.Organization.Team.Repositories.Edges {
 			teamRepository := &TeamRepository{
 				Owner:      string(m.Node.Owner.Login),
