@@ -311,7 +311,7 @@ func (s *GithubClient) GetOrganizationRepositories(org string) ([]*Repository, e
 		} `graphql:"organization(login: $org)"`
 	}
 	var repositories []*Repository
-	return repositories, s.Query(&query).Str("org", org).Cursor("cursor").Run(func() PageInfo {
+	return repositories, s.Query(&query).Str("org", org).Cursor("cursor").RunPaginated(func() PageInfo {
 		for _, node := range query.Organization.Repositories.Nodes {
 			r := &Repository{
 				Owner:               string(node.Owner.Login),
