@@ -20,7 +20,7 @@ jobs:
         run: echo "PATH=$(echo $PATH:~/.go/bin)" >> $GITHUB_ENV
 
       - name: Install ginkgo
-        run: go get github.com/onsi/ginkgo/ginkgo
+        run: go install github.com/onsi/ginkgo/ginkgo@latest
 
       - name: Test all
         run: make test
